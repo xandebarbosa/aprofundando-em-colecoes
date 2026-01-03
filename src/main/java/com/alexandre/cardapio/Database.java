@@ -53,7 +53,7 @@ public class Database {
 
     public boolean removeItemCardapio(Long id) {
         ItemCardapio removido = itensPorId.remove(id);
-        return removido != null;
+        return removido != null; //Se for diferente de nulo, quer dizer que removeu
     }
 
     public boolean alteraPrecoItemCardapio(Long id, BigDecimal novoPreco) {

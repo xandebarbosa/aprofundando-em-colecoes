@@ -8,7 +8,7 @@ import static com.alexandre.cardapio.ItemCardapio.CategoriaCardapio.ENTRADAS;
 import static com.alexandre.cardapio.ItemCardapio.CategoriaCardapio.SOBREMESA;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         Database database = new Database();
         List<ItemCardapio> itens = database.listaItensCardapio();
         itens.forEach(System.out::println);
@@ -75,6 +75,43 @@ public class Main {
 
         historico.listaVisualizacoes();
         historico.totalItensVisualizados();
+
+        //----------------------------------------------------------------
+        // PRECISO REMOVER UM ITEM DO CARDÁPIO
+        System.out.println("----------REMOVENDO ITEM DO CARDÁPIO--------------");
+        long idParaRemover = 1L;
+        boolean removido = database.removeItemCardapio(idParaRemover); // refresco
+        System.out.printf("Item %d %s\n", idParaRemover,
+                (removido ? "removido" : "não encontrado"));
+        System.out.println();
+        System.out.println("-IMPRIMINDO A LISTAGEM EM TELA PARA CONFIRMAR SE O ITEM FOI REMOVIDO--");
+        database.listaItensCardapio()
+                .forEach(System.out::println); //IMPRIMINDO A LISTAGEM EM TELA PARA CONFIRMAR SE O ITEM FOI REMOVIDO
+
+        System.out.println("--Item removido ainda no histórico--");
+
+        System.out.println("Solicitando GC...");
+        System.gc();
+
+        Thread.sleep(500); // tempo para o GC agir
+        historico.listaVisualizacoes();
+        historico.totalItensVisualizados();
+
+        System.out.println();
+        //PRECISO ALTERAR O PREÇO DE UM ITEM DE CARDÁPIO
+        System.out.println("--ALTERANDO O PREÇO DE UM ITEM DE CARDÁPIO--");
+        System.out.println();
+        ItemCardapio item = database.itemCardapioPorId(9L).orElseThrow();
+        System.out.printf("'%s': R$ %.2f\n", item.nome(), item.preco());
+        boolean alterado = database.alteraPrecoItemCardapio(9L, new BigDecimal("2.99"));
+        System.out.printf("%s\n", alterado ? "Preço alterado." : "Não encontrado.");
+        ItemCardapio itemAlterado = database.itemCardapioPorId(9L).orElseThrow();
+        System.out.printf("'%s': R$ %.2f\n", itemAlterado.nome(), itemAlterado.preco());
+
+        System.out.println();
+        //PRECISO AUDITAR TODA MUDANÇA DE PREÇO DOS ITENS
+
+
 
         //-------------------------------------------------------------
         // LinkedHashSet - Mantém a ordem de inserção - sem repetir elementos
