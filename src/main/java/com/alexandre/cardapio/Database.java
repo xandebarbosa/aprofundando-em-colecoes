@@ -61,7 +61,7 @@ public class Database {
         if (item == null ) return false;
         ItemCardapio itemPrecoAlterado = item.alteraPreco(novoPreco);
         itensPorId.put(id, itemPrecoAlterado);
-        auditoriaPrecos.put(item, novoPreco);
+        auditoriaPrecos.put(item, novoPreco); //Item velho, preço novo
         return true;
     }
 

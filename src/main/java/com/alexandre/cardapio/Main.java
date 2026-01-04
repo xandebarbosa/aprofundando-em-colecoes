@@ -10,8 +10,8 @@ import static com.alexandre.cardapio.ItemCardapio.CategoriaCardapio.SOBREMESA;
 public class Main {
     public static void main(String[] args) throws InterruptedException {
         Database database = new Database();
-        List<ItemCardapio> itens = database.listaItensCardapio();
-        itens.forEach(System.out::println);
+//        List<ItemCardapio> itens = database.listaItensCardapio();
+//        itens.forEach(System.out::println);
 
         System.out.println("------------------------");
 
@@ -99,19 +99,41 @@ public class Main {
 
         System.out.println();
         //PRECISO ALTERAR O PREÇO DE UM ITEM DE CARDÁPIO
-        System.out.println("--ALTERANDO O PREÇO DE UM ITEM DE CARDÁPIO--");
-        System.out.println();
-        ItemCardapio item = database.itemCardapioPorId(9L).orElseThrow();
-        System.out.printf("'%s': R$ %.2f\n", item.nome(), item.preco());
-        boolean alterado = database.alteraPrecoItemCardapio(9L, new BigDecimal("2.99"));
-        System.out.printf("%s\n", alterado ? "Preço alterado." : "Não encontrado.");
-        ItemCardapio itemAlterado = database.itemCardapioPorId(9L).orElseThrow();
-        System.out.printf("'%s': R$ %.2f\n", itemAlterado.nome(), itemAlterado.preco());
+//        System.out.println("--ALTERANDO O PREÇO DE UM ITEM DE CARDÁPIO--");
+//        System.out.println();
+//        ItemCardapio item = database.itemCardapioPorId(9L).orElseThrow();
+//        System.out.printf("'%s': R$ %.2f\n", item.nome(), item.preco());
+//        boolean alterado = database.alteraPrecoItemCardapio(9L, new BigDecimal("2.99"));
+//        System.out.printf("%s\n", alterado ? "Preço alterado." : "Não encontrado.");
+//        ItemCardapio itemAlterado = database.itemCardapioPorId(9L).orElseThrow();
+//        System.out.printf("'%s': R$ %.2f\n", itemAlterado.nome(), itemAlterado.preco());
 
         System.out.println();
         //PRECISO AUDITAR TODA MUDANÇA DE PREÇO DOS ITENS
+        //database.rastroAuditoriaPrecos();
 
+        //Mudando preços na Main
+        boolean alterado1 = database.alteraPrecoItemCardapio(2L, new BigDecimal("3.99"));
+        System.out.printf("%s\n", alterado1 ? "Preço alterado 1" : "Não encontrado.");
+        boolean alterado2 = database.alteraPrecoItemCardapio(2L, new BigDecimal("2.99"));
+        System.out.printf("%s\n", alterado2 ? "Preço alterado 2" : "Não encontrado.");
+        boolean alterado3 = database.alteraPrecoItemCardapio(2L, new BigDecimal("4.99"));
+        System.out.printf("%s\n", alterado3 ? "Preço alterado 3" : "Não encontrado.");
+        database.rastroAuditoriaPrecos();
 
+        System.out.println("------------------------");
+        System.out.println();
+        ItemCardapio item= database.itemCardapioPorId(7L).orElseThrow(); // 2.99
+        database.alteraPrecoItemCardapio(7L, new BigDecimal("3.99")); // 2.99 => 3.99
+        ItemCardapio item1 = database.itemCardapioPorId(7L).orElseThrow(); // 3.99
+        database.alteraPrecoItemCardapio(7L, new BigDecimal("2.99")); // 3.99 => 2.99
+        ItemCardapio item2 = database.itemCardapioPorId(7L).orElseThrow(); // 2.99
+        database.alteraPrecoItemCardapio(7L, new BigDecimal("4.99")); // 2.99 => 4.99
+        ItemCardapio item3 = database.itemCardapioPorId(7L).orElseThrow(); // 4.99
+        //IdentityHashMap
+        System.out.println("== " + (item == item2));
+        System.out.println("equals() " + (item.equals(item2)));
+        System.out.println("hashCode() " + (item.hashCode() == item2.hashCode()));
 
         //-------------------------------------------------------------
         // LinkedHashSet - Mantém a ordem de inserção - sem repetir elementos
